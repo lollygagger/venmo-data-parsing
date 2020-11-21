@@ -26,3 +26,25 @@ def concat_lists(li1, li2, li3=None, li4=None, li5=None, li6=None):
     '''
     function will concatonate up to 6 lists at once, requires at least 2 as input
     '''
+    final = []
+
+    final.append(li1)
+    final.append(li2)
+
+    if li3 != None:
+        final.append(li3)
+    if li4 != None:
+        final.append(li4)
+    if li5 != None:
+        final.append(li5)
+    if li6 != None:
+        final.append(li6)
+
+    return final
+
+def sum_list(li):
+    sum = 0
+    for item in li:
+        sum += int(item)
+
+    return sum
