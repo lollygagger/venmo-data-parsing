@@ -1,6 +1,5 @@
 '''
 #TODO:
-fix create_people() to include every person, right now it is skipping some people for some reason
 
 '''
 
@@ -40,6 +39,7 @@ class Person:
 
         string += "\nTransactions: "
         for item in self.__transactions:
+            string += "\n-----"
             string += "\n" + str(item)
 
         return string
@@ -155,20 +155,20 @@ def create_people(payments_list):
     '''
     people_list = []
     for payment in payments_list:
+        #This implementation ignores instant transfers and charges but they could be added later
         if payment.get_type() == "Payment":
             flag = False
-            for person in people_list:
+            for person in people_list:#check people_list to see if the new person is already in it
                 if payment.get_from() == person.get_name(): #if the person is already in people_list
                     person.add_transaction(payment)
                     person.add_to_paid(payment.get_ammount())
-                    flag = True
+                    flag = True #mark that they were in people_list already
                 else:
                     pass
             if not flag: #only do this if the person isnt in people_list already
+                #make a new perrson and add it to people_list
                 new_person = Person(payment.get_from(), payment.get_ammount())
                 people_list.append(new_person)
-
-                
 
     return people_list
             
@@ -184,24 +184,32 @@ def merge_people(person1, person2):
     return temp_person
 
 
-def sum_list(li):
-    #helper function to return the sum of all items in a list(as long as they are ints)
-    sum = 0
+def total_made(payments_list, name):
+    #helper function that gets the full ammount paid to one person
+    total = 0
+    for payment in payments_list:
+        if payment.get_type() == "Payment" and payment.get_to() == name:
+            total += float(payment.get_ammount())
+    return total
+
+def print_list(li):
+    #helper function to print a list
     for item in li:
-        sum += int(item)
+        print('----------')
+        print(item)
 
-    return sum
-
+def print_list_repr(li):
+    #helper function to print the values of a list in repr form
+    for item in li:
+        print('----------')
+        print(repr(item))
 
 def main():
     test1 = create_payments('Venmo Statements/oct_statement_2020.csv')
     test2 = create_payments('Venmo Statements/sept_statement_2020.csv')
-    people_list = create_people(test1) 
-
-    for item in people_list:
-        print('----------')
-        print(item)
-
+    people_list = create_people(test2) 
+    
+    
 
 if __name__ == "__main__":
     main()
