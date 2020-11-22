@@ -11,16 +11,38 @@ class Person:
     __slots__ = ['__paid', '__recieved', '__transactions', '__name']
     def __init__(self, name, paid=0, recieved=0):
         self.__name = name
-        self.__paid = paid
-        self.__recieved = recieved
+        self.__paid = float(paid)
+        self.__recieved = float(recieved)
         self.__transactions = []
+
+    def __str__(self):
+        string = ""
+
+        string += "Name: " + self.__name
+        string += "\nPaid: " + str(self.__paid)
+        string += "\nRecieved: " + str(self.__recieved)
+
+        return string
+
+    def __repr__(self):
+        string = ""
+
+        string += "Name: " + self.__name
+        string += "\nPaid: " + str(self.__paid)
+        string += "\nRecieved: " + str(self.__recieved)
+
+        string += "\nTransactions: "
+        for item in self.__transactions:
+            string += "\n" + str(item)
+
+        return string
 
     def add_transaction(self, transaction):
         self.__transactions.append(transaction)
     def add_to_paid(self, ammount):
-        self.__paid += ammount
+        self.__paid += float(ammount)
     def add_to_recieved(self, ammount):
-        self.__recieved += ammount
+        self.__recieved += float(ammount)
 
     def get_name(self):
         return self.__name
@@ -131,12 +153,13 @@ def create_people(payments_list):
             for person in people_list:
                 if payment.get_from() == person.get_name():
                     person.add_transaction(payment)
-                    person.add_to_paid(payment.get_ammount)
+                    person.add_to_paid(payment.get_ammount())
                     flag = True
                 else:
                     pass
             if not flag:
                 new_person = Person(payment.get_from(), payment.get_ammount())
+                people_list.append(new_person)
 
     return people_list
             
@@ -191,10 +214,9 @@ def main():
     test = create_payments('Venmo Statements/oct_statement_2020.csv')
     people_list = create_people(test)
 
-
     for item in people_list:
         print('----------')
-        print(repr(item))
+        print(item)
 
 
 if __name__ == "__main__":
