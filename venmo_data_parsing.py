@@ -1,3 +1,10 @@
+'''
+#TODO:
+fix create_people() to include every person, right now it is skipping some people for some reason
+
+'''
+
+
 import csv
 
 class Person:
@@ -174,32 +181,6 @@ def merge_people(person1, person2):
 
     return temp_person
 
-'''
-
-THIS NEEDS TO BE REPLACED BY merge_people()
-
-LEGACY SHIZZ
-def concat_lists(li1, li2, li3=None, li4=None, li5=None, li6=None):
-    
-    function will concatonate up to 6 lists at once, requires at least 2 as input
-    
-    final = []
-
-    final.append(li1)
-    final.append(li2)
-
-    if li3 != None:
-        final.append(li3)
-    if li4 != None:
-        final.append(li4)
-    if li5 != None:
-        final.append(li5)
-    if li6 != None:
-        final.append(li6)
-
-    return final
-
-'''
 
 def sum_list(li):
     #helper function to return the sum of all items in a list(as long as they are ints)
@@ -211,8 +192,9 @@ def sum_list(li):
 
 
 def main():
-    test = create_payments('Venmo Statements/oct_statement_2020.csv')
-    people_list = create_people(test)
+    test1 = create_payments('Venmo Statements/oct_statement_2020.csv')
+    test2 = create_payments('Venmo Statements/sept_statement_2020.csv')
+    people_list = create_people(test2)
 
     for item in people_list:
         print('----------')
