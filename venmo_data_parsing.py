@@ -125,9 +125,21 @@ def create_people(payments_list):
     the information for one person interacting with venmo
     '''
     people_list = []
+    flag = False
     for payment in payments_list:
         if payment.get_type() == "Payment":
-            pass
+            for person in people_list:
+                if payment.get_from() == person.get_name():
+                    person.add_transaction(payment)
+                    person.add_to_paid(payment.get_ammount)
+                    flag = True
+                else:
+                    pass
+            if not flag:
+                new_person = Person(payment.get_from(), payment.get_ammount())
+
+    return people_list
+            
 
 def merge_people(person1, person2):
     '''
@@ -177,8 +189,10 @@ def sum_list(li):
 
 def main():
     test = create_payments('Venmo Statements/oct_statement_2020.csv')
+    people_list = create_people(test)
 
-    for item in test:
+
+    for item in people_list:
         print('----------')
         print(repr(item))
 
