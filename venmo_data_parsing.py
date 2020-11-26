@@ -1,5 +1,7 @@
 '''
-#TODO:
+TO DO:
+Automatic month merging system
+implement support for parsing venmo charges 
 
 '''
 
@@ -31,18 +33,19 @@ class Person:
         return string
 
     def __repr__(self):
-        string = ""
+        string = "\n"
 
-        string += "Name: " + self.__name
+        string += "\nName: " + self.__name
         string += "\nPaid: " + str(self.__paid)
         string += "\nRecieved: " + str(self.__recieved)
 
-        string += "\nTransactions: "
+        string += "\n\nTransactions: "
         for item in self.__transactions:
             string += "\n-----"
             string += "\n" + str(item)
-
+      
         return string
+        
 
     def add_transaction(self, transaction):
         self.__transactions.append(transaction)
@@ -57,6 +60,8 @@ class Person:
         return self.__paid
     def get_recieved(self):
         return self.__recieved
+    def get_transactions(self):
+        return self.__transactions
 
 
 class Payment:
@@ -163,12 +168,34 @@ def create_people(payments_list):
                     person.add_transaction(payment)
                     person.add_to_paid(payment.get_ammount())
                     flag = True #mark that they were in people_list already
+                if payment.get_to() == person.get_name():
+                    person.add_transaction(payment)
+                    person.add_to_recieved(payment.get_ammount())
+                
                 else:
                     pass
             if not flag: #only do this if the person isnt in people_list already
                 #make a new perrson and add it to people_list
                 new_person = Person(payment.get_from(), payment.get_ammount())
                 people_list.append(new_person)
+        elif payment.get_type() == "Charge":
+            flag = False
+            for person in people_list:#check people_list to see if the new person is already in it
+                if payment.get_to() == person.get_name(): #if the person is already in people_list
+                    person.add_transaction(payment)
+                    person.add_to_paid(payment.get_ammount())
+                    flag = True #mark that they were in people_list already
+                if payment.get_from() == person.get_name():
+                    person.add_transaction(payment)
+                    person.add_to_recieved(payment.get_ammount())
+                
+                else:
+                    pass
+            if not flag: #only do this if the person isnt in people_list already
+                #make a new perrson and add it to people_list
+                new_person = Person(payment.get_from(), payment.get_ammount())
+                people_list.append(new_person)
+    
 
     return people_list
             
@@ -192,24 +219,33 @@ def total_made(payments_list, name):
             total += float(payment.get_ammount())
     return total
 
+def total_sent(payments_list, name):
+    #helper function that gets the full ammount sent from one person
+    total = 0
+    for payment in payments_list:
+        if payment.get_type() == "Payment" and payment.get_from() == name:
+            total += float(payment.get_ammount())
+    return total
+
 def print_list(li):
     #helper function to print a list
     for item in li:
-        print('----------')
-        print(item)
+        print('---------------')
+        print(str(item))
 
 def print_list_repr(li):
     #helper function to print the values of a list in repr form
     for item in li:
-        print('----------')
+        print('---------------')
         print(repr(item))
 
 def main():
-    test1 = create_payments('Venmo Statements/oct_statement_2020.csv')
-    test2 = create_payments('Venmo Statements/sept_statement_2020.csv')
-    people_list = create_people(test2) 
-    
-    
+    oct_payments = create_payments('Venmo Statements/oct_statement_2020.csv')
+    sept_payments = create_payments('Venmo Statements/sept_statement_2020.csv')
+    people_list = create_people(oct_payments)
+
+    print(repr(people_list[0]))
+
 
 if __name__ == "__main__":
     main()
