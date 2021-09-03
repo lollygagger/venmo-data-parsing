@@ -242,8 +242,12 @@ def print_list_repr(li):
 def main():
     oct_payments = create_payments('Venmo Statements/oct_statement_2020.csv')
     sept_payments = create_payments('Venmo Statements/sept_statement_2020.csv')
-    people_list = create_people(oct_payments)
+    nov_payments = create_payments('Venmo Statements/nov_statement_2020.csv')
 
+    #list of all the people that were a part of the statement
+    people_list = create_people(nov_payments)
+
+    #prints the transactions of the 0 index of the people list which should be myself
     print(repr(people_list[0]))
 
 
